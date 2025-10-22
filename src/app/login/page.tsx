@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { SocialAuthSection } from "@/components/auth/SocialAuthSection";
 
 interface FormErrors {
   email?: string;
@@ -202,6 +203,13 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Social Authentication Section */}
+            <SocialAuthSection 
+              mode="signin" 
+              disabled={isLoading || !isOnline}
+              className="mb-6"
+            />
+
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* General Error */}
               {errors.general && (

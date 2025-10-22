@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { NavigationHeader } from '@/components/layout/NavigationHeader';
 import Link from 'next/link';
 import { analytics } from '../../lib/analytics';
+import { SocialAuthSection } from '@/components/auth/SocialAuthSection';
 
 export default function SignupPage() {
   const [mounted, setMounted] = useState(false);
@@ -244,6 +245,13 @@ export default function SignupPage() {
             </div>
           </CardHeader>
           <CardContent>
+            {/* Social Authentication Section */}
+            <SocialAuthSection 
+              mode="signup" 
+              disabled={isLoading}
+              className="mb-6"
+            />
+
             {error && (
               <Alert className="mb-4 border-red-200 bg-red-50">
                 <AlertDescription className="text-red-800">
