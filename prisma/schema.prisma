@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  username       String   @unique
+  email          String   @unique
+  passwordHash   String
+  firstName      String
+  lastName       String
+  role           Role     @default(AGENT)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  assignedBuyers Buyer[]  @relation("AssignedTo")
+  assignedLeads  Lead[]   @relation("AssignedTo")
+  assignedTasks  Task[]   @relation("AssignedTo")
+}
+
+model Lead {
+  id             String     @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String?
+  phone          String?
+  address        String?
+  city           String?
+  state          String?
+  zipCode        String?
+  propertyType   String?
+  estimatedValue Float?
+  motivation     String?
+  timeline       String?
+  status         LeadStatus @default(NEW)
+  source         String?
+  notes          String?
+  assignedToId   String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  assignedTo     User?      @relation("AssignedTo", fields: [assignedToId], references: [id])
+  tasks          Task[]
+}
+
+model Buyer {
+  id             String      @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String?
+  phone          String?
+  maxBudget      Float?
+  preferredAreas String?
+  propertyTypes  String?
+  status         BuyerStatus @default(ACTIVE)
+  notes          String?
+  assignedToId   String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  assignedTo     User?       @relation("AssignedTo", fields: [assignedToId], references: [id])
+  tasks          Task[]
+}
+
+model Task {
+  id           String       @id @default(cuid())
+  title        String
+  description  String?
+  status       TaskStatus   @default(PENDING)
+  priority     TaskPriority @default(MEDIUM)
+  dueDate      DateTime?
+  assignedToId String?
+  leadId       String?
+  buyerId      String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  assignedTo   User?        @relation("AssignedTo", fields: [assignedToId], references: [id])
+  buyer        Buyer?       @relation(fields: [buyerId], references: [id])
+  lead         Lead?        @relation(fields: [leadId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  AGENT
+  ACQUISITIONS
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL_SENT
+  NEGOTIATING
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum BuyerStatus {
+  ACTIVE
+  INACTIVE
+  QUALIFIED
+  UNQUALIFIED
+}
+
+model Property {
+  id              String         @id @default(cuid())
+  address         String
+  city            String
+  state           String
+  zipCode         String
+  propertyType    PropertyType   @default(SINGLE_FAMILY)
+  bedrooms        Int?
+  bathrooms       Float?
+  squareFeet      Int?
+  lotSize         Float?
+  yearBuilt       Int?
+  listPrice       Float?
+  marketValue     Float?
+  status          PropertyStatus @default(AVAILABLE)
+  description     String?
+  images          String[]       @default([])
+  features        String[]       @default([])
+  notes           String?
+  acquisitionDate DateTime?
+  saleDate        DateTime?
+  profit          Float?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  offers          Offer[]
+}
+
+model Offer {
+  id           String      @id @default(cuid())
+  propertyId   String
+  buyerName    String
+  buyerEmail   String?
+  buyerPhone   String?
+  offerAmount  Float
+  earnestMoney Float?
+  closingDate  DateTime?
+  contingencies String?
+  status       OfferStatus @default(PENDING)
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  property     Property    @relation(fields: [propertyId], references: [id])
+}
+
+enum PropertyType {
+  SINGLE_FAMILY
+  MULTI_FAMILY
+  CONDO
+  TOWNHOUSE
+  LAND
+  COMMERCIAL
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  UNDER_CONTRACT
+  SOLD
+  OFF_MARKET
+  PENDING
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COUNTERED
+  WITHDRAWN
+}

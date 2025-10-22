@@ -734,7 +734,7 @@ NEXTAUTH_URL="http://localhost:3000"
 # Production (Vercel Dashboard)
 DATABASE_URL="postgresql://user:pass@db.supabase.co:5432/postgres"
 NEXTAUTH_SECRET="production-secret-key"
-NEXTAUTH_URL="https://flipstackk.vercel.app"
+NEXTAUTH_URL="https://flipstackk.kevnbenestate.org"
 ```
 
 ## 11. Development Workflow

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Signup Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+        .log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Test Signup Form</h1>
+        <p>This form tests the signup functionality directly against the API endpoint.</p>
+        
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="">Select a role</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="ACQUISITIONS">Acquisitions Agent</option>
+                    <option value="MANAGER">Manager</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            
+            <button type="submit" id="submitBtn">Create Account</button>
+        </form>
+        
+        <div id="message"></div>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const messageDiv = document.getElementById('message');
+        const logDiv = document.getElementById('log');
+        
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        function showMessage(message, isError = false) {
+            messageDiv.innerHTML = `<div class="${isError ? 'error' : 'success'}">${message}</div>`;
+        }
+        
+        // Generate random test data
+        function generateTestData() {
+            const randomId = Math.floor(Math.random() * 10000);
+            document.getElementById('firstName').value = `Test${randomId}`;
+            document.getElementById('lastName').value = `User${randomId}`;
+            document.getElementById('username').value = `testuser${randomId}`;
+            document.getElementById('email').value = `test${randomId}@example.com`;
+            document.getElementById('role').value = 'ADMIN';
+            document.getElementById('password').value = 'password123';
+            document.getElementById('confirmPassword').value = 'password123';
+            log(`Generated test data for user: testuser${randomId}`);
+        }
+        
+        // Auto-fill form with test data on page load
+        window.addEventListener('load', () => {
+            generateTestData();
+            log('Page loaded, test data generated');
+        });
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            log('🚀 Form submission started');
+            
+            const formData = new FormData(form);
+            const data = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                username: formData.get('username'),
+                email: formData.get('email'),
+                role: formData.get('role'),
+                password: formData.get('password'),
+                confirmPassword: formData.get('confirmPassword')
+            };
+            
+            log(`Form data: ${JSON.stringify(data, null, 2)}`);
+            
+            // Client-side validation
+            if (data.password !== data.confirmPassword) {
+                showMessage('Passwords do not match', true);
+                log('❌ Validation failed: Passwords do not match');
+                return;
+            }
+            
+            if (data.password.length < 6) {
+                showMessage('Password must be at least 6 characters long', true);
+                log('❌ Validation failed: Password too short');
+                return;
+            }
+            
+            log('✅ Client-side validation passed');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating Account...';
+            
+            try {
+                log('📤 Making API request to /api/auth/signup');
+                
+                const response = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: data.username,
+                        email: data.email,
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        password: data.password,
+                        role: data.role
+                    }),
+                });
+                
+                log(`📊 Response received: Status ${response.status} (${response.statusText})`);
+                
+                const responseData = await response.json();
+                log(`📄 Response data: ${JSON.stringify(responseData, null, 2)}`);
+                
+                if (response.ok) {
+                    showMessage('Account created successfully!');
+                    log('✅ Success! Account created');
+                    
+                    // Generate new test data for next test
+                    setTimeout(() => {
+                        generateTestData();
+                        log('New test data generated for next test');
+                    }, 2000);
+                } else {
+                    showMessage(`Error: ${responseData.error}`, true);
+                    log(`❌ Error response: ${responseData.error}`);
+                }
+                
+            } catch (error) {
+                log(`💥 Network error: ${error.message}`);
+                showMessage(`Network error: ${error.message}`, true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Account';
+                log('🏁 Request completed, button re-enabled');
+            }
+        });
+        
+        // Add button to generate new test data
+        const generateBtn = document.createElement('button');
+        generateBtn.textContent = 'Generate New Test Data';
+        generateBtn.type = 'button';
+        generateBtn.style.marginTop = '10px';
+        generateBtn.style.backgroundColor = '#28a745';
+        generateBtn.addEventListener('click', generateTestData);
+        form.appendChild(generateBtn);
+    </script>
+</body>
+</html>

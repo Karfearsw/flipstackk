@@ -1,0 +1,13 @@
+node_modules
+build
+dist
+.git
+.trae
+.log
+.figma
+.next/cache
+prisma/dev.db
+test-*.js
+debug-*.js
+clear-and-seed-users.js
+verify-env-vars.js
