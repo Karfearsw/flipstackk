@@ -9,5 +9,6 @@
     "src/app/api/**/*.ts": {
       "maxDuration": 30
     }
-  }
+  },
+  "domains": ["flipstackk.kevnbenestate.org"]
 }
