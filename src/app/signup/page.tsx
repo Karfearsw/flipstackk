@@ -22,7 +22,7 @@ export default function SignupPage() {
     lastName: '',
     password: '',
     confirmPassword: '',
-    role: ''
+    role: 'investor'
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -54,6 +54,13 @@ export default function SignupPage() {
       return false;
     }
 
+    // Validate role is one of the accepted values
+    const validRoles = ['investor', 'agent', 'wholesaler', 'flipper', 'other'];
+    if (!validRoles.includes(formData.role)) {
+      setError('Please select a valid role from the available options');
+      return false;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return false;
@@ -76,8 +83,8 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    // Validate form before submission
+    if (!validateForm()) {
       return;
     }
 
