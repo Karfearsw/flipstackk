@@ -10,7 +10,10 @@
     "db:seed": "tsx prisma/seed.ts",
     "analyze": "ANALYZE=true npm run build",
     "analyze:server": "BUNDLE_ANALYZE=server npm run build",
-    "analyze:browser": "BUNDLE_ANALYZE=browser npm run build"
+    "analyze:browser": "BUNDLE_ANALYZE=browser npm run build",
+    "check": "tsc --noEmit && npm run lint",
+    "db:migrate": "npx supabase db push",
+    "db:reset": "npx supabase db reset"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.11.0",
