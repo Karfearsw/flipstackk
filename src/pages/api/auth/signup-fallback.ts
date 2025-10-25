@@ -26,9 +26,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'Password must be at least 6 characters long' });
     }
 
-    // Validate role
-    const validRoles = ['ADMIN', 'ACQUISITIONS', 'MANAGER'];
-    if (!validRoles.includes(role)) {
+    // Validate role - map frontend roles to database enum values
+    const roleMapping: { [key: string]: string } = {
+      'investor': 'ADMIN',
+      'agent': 'AGENT',
+      'wholesaler': 'ACQUISITIONS',
+      'flipper': 'ACQUISITIONS',
+      'other': 'AGENT'
+    };
+
+    const dbRole = roleMapping[role];
+    if (!dbRole) {
       return res.status(400).json({ error: 'Invalid role selected' });
     }
 
@@ -42,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email,
       firstName,
       lastName,
-      role,
+      role: dbRole,
       createdAt: new Date().toISOString()
     };
 

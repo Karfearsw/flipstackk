@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Role Signup - FlipStackk</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .role-test {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .role-test h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .test-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #dc2626;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #b91c1c;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .log {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .test-all-btn {
+            background: #059669;
+            font-size: 18px;
+            padding: 15px 30px;
+            margin: 20px 0;
+        }
+        .test-all-btn:hover {
+            background: #047857;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Role Signup Testing Tool</h1>
+        <p>This tool tests all role options in the signup process to ensure the "Invalid role selected" error is fixed.</p>
+        
+        <button class="test-all-btn" onclick="testAllRoles()">🚀 Test All Roles Automatically</button>
+        
+        <div id="testLog" class="log" style="display: none;">
+            <h3>Test Log:</h3>
+            <div id="logContent"></div>
+        </div>
+        
+        <div id="overallResult" style="display: none;"></div>
+    </div>
+
+    <!-- Individual Role Tests -->
+    <div class="test-container">
+        <h2>Individual Role Tests</h2>
+        
+        <div class="role-test">
+            <h3>👔 Investor Role Test</h3>
+            <form class="test-form" onsubmit="testRole(event, 'investor')">
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" name="firstName" value="Test" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" name="lastName" value="Investor" required>
+                </div>
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" name="username" value="testinvestor123" required>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="testinvestor@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select name="role" required>
+                        <option value="investor" selected>Investor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" name="password" value="testpass123" required>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit">Test Investor Signup</button>
+                </div>
+            </form>
+            <div id="investor-result"></div>
+        </div>
+
+        <div class="role-test">
+            <h3>🏠 Real Estate Agent Role Test</h3>
+            <form class="test-form" onsubmit="testRole(event, 'agent')">
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" name="firstName" value="Test" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" name="lastName" value="Agent" required>
+                </div>
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" name="username" value="testagent123" required>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="testagent@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select name="role" required>
+                        <option value="agent" selected>Real Estate Agent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" name="password" value="testpass123" required>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit">Test Agent Signup</button>
+                </div>
+            </form>
+            <div id="agent-result"></div>
+        </div>
+
+        <div class="role-test">
+            <h3>🏢 Wholesaler Role Test</h3>
+            <form class="test-form" onsubmit="testRole(event, 'wholesaler')">
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" name="firstName" value="Test" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" name="lastName" value="Wholesaler" required>
+                </div>
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" name="username" value="testwholesaler123" required>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="testwholesaler@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select name="role" required>
+                        <option value="wholesaler" selected>Wholesaler</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" name="password" value="testpass123" required>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit">Test Wholesaler Signup</button>
+                </div>
+            </form>
+            <div id="wholesaler-result"></div>
+        </div>
+
+        <div class="role-test">
+            <h3>🔨 House Flipper Role Test</h3>
+            <form class="test-form" onsubmit="testRole(event, 'flipper')">
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" name="firstName" value="Test" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" name="lastName" value="Flipper" required>
+                </div>
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" name="username" value="testflipper123" required>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="testflipper@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select name="role" required>
+                        <option value="flipper" selected>House Flipper</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" name="password" value="testpass123" required>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit">Test Flipper Signup</button>
+                </div>
+            </form>
+            <div id="flipper-result"></div>
+        </div>
+
+        <div class="role-test">
+            <h3>❓ Other Role Test</h3>
+            <form class="test-form" onsubmit="testRole(event, 'other')">
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" name="firstName" value="Test" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" name="lastName" value="Other" required>
+                </div>
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" name="username" value="testother123" required>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" name="email" value="testother@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Role:</label>
+                    <select name="role" required>
+                        <option value="other" selected>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" name="password" value="testpass123" required>
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit">Test Other Signup</button>
+                </div>
+            </form>
+            <div id="other-result"></div>
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const logDiv = document.getElementById('testLog');
+            const logContent = document.getElementById('logContent');
+            logDiv.style.display = 'block';
+            logContent.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${message}</div>`;
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+
+        function showResult(roleId, success, message) {
+            const resultDiv = document.getElementById(`${roleId}-result`);
+            resultDiv.className = `result ${success ? 'success' : 'error'}`;
+            resultDiv.innerHTML = success ? `✅ ${message}` : `❌ ${message}`;
+        }
+
+        async function testRole(event, roleType) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            log(`🧪 Testing ${roleType} role signup...`);
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/auth/signup-supabase', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: data.username,
+                        email: data.email,
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        password: data.password,
+                        role: data.role
+                    }),
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ ${roleType} signup successful!`);
+                    showResult(roleType, true, `${roleType} role signup successful!`);
+                    return { success: true, role: roleType };
+                } else {
+                    log(`❌ ${roleType} signup failed: ${result.error}`);
+                    showResult(roleType, false, `${roleType} role signup failed: ${result.error}`);
+                    return { success: false, role: roleType, error: result.error };
+                }
+                
+            } catch (error) {
+                log(`💥 ${roleType} signup error: ${error.message}`);
+                showResult(roleType, false, `${roleType} role signup error: ${error.message}`);
+                return { success: false, role: roleType, error: error.message };
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = `Test ${roleType.charAt(0).toUpperCase() + roleType.slice(1)} Signup`;
+            }
+        }
+
+        async function testAllRoles() {
+            const roles = [
+                { type: 'investor', username: 'autoinvestor123', email: 'autoinvestor@example.com' },
+                { type: 'agent', username: 'autoagent123', email: 'autoagent@example.com' },
+                { type: 'wholesaler', username: 'autowholesaler123', email: 'autowholesaler@example.com' },
+                { type: 'flipper', username: 'autoflipper123', email: 'autoflipper@example.com' },
+                { type: 'other', username: 'autoother123', email: 'autoother@example.com' }
+            ];
+            
+            log('🚀 Starting automated test of all roles...');
+            
+            const results = [];
+            
+            for (const role of roles) {
+                log(`🧪 Testing ${role.type} role...`);
+                
+                try {
+                    const response = await fetch('/api/auth/signup-supabase', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            username: role.username,
+                            email: role.email,
+                            firstName: 'Auto',
+                            lastName: role.type.charAt(0).toUpperCase() + role.type.slice(1),
+                            password: 'testpass123',
+                            role: role.type
+                        }),
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        log(`✅ ${role.type} role test PASSED`);
+                        showResult(role.type, true, `${role.type} role test PASSED`);
+                        results.push({ role: role.type, success: true });
+                    } else {
+                        log(`❌ ${role.type} role test FAILED: ${result.error}`);
+                        showResult(role.type, false, `${role.type} role test FAILED: ${result.error}`);
+                        results.push({ role: role.type, success: false, error: result.error });
+                    }
+                    
+                } catch (error) {
+                    log(`💥 ${role.type} role test ERROR: ${error.message}`);
+                    showResult(role.type, false, `${role.type} role test ERROR: ${error.message}`);
+                    results.push({ role: role.type, success: false, error: error.message });
+                }
+                
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            // Show overall results
+            const successCount = results.filter(r => r.success).length;
+            const totalCount = results.length;
+            
+            const overallDiv = document.getElementById('overallResult');
+            overallDiv.style.display = 'block';
+            
+            if (successCount === totalCount) {
+                overallDiv.className = 'result success';
+                overallDiv.innerHTML = `🎉 ALL TESTS PASSED! (${successCount}/${totalCount}) - The "Invalid role selected" error has been fixed!`;
+                log(`🎉 ALL TESTS COMPLETED SUCCESSFULLY! ${successCount}/${totalCount} roles working correctly.`);
+            } else {
+                overallDiv.className = 'result error';
+                overallDiv.innerHTML = `⚠️ SOME TESTS FAILED (${successCount}/${totalCount}) - Check individual results above.`;
+                log(`⚠️ TESTS COMPLETED WITH ISSUES: ${successCount}/${totalCount} roles working correctly.`);
+            }
+        }
+    </script>
+</body>
+</html>
